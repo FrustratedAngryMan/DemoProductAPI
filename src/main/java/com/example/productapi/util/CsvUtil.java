@@ -79,4 +79,20 @@ public class CsvUtil {
             e.printStackTrace();
         }
     }
+
+    public static void writeCategoriesToCsv(String filePath, List<Category> categories) {
+        try (Writer w = new FileWriter(filePath, false);
+             CSVWriter csvWriter = new CSVWriter(w)) {
+            csvWriter.writeNext(new String[]{"id", "name", "description"});
+            for (Category c : categories) {
+                csvWriter.writeNext(new String[]{
+                        String.valueOf(c.getId()),
+                        c.getName(),
+                        c.getDescription()
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.example.productapi.service;
 
 import com.example.productapi.model.Category;
 import com.example.productapi.repository.CategoryRepository;
+import com.example.productapi.util.CsvUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -14,6 +15,9 @@ class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Spy
+    private CsvUtil csvUtil; // Only if you need to verify or mock CSV operations, otherwise can be omitted
 
     @InjectMocks
     private CategoryService categoryService;
@@ -35,10 +39,40 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryById_returnsCategory() {
-        when(categoryRepository.findById(1L)).thenReturn(Optional.ofNullable(sampleCategory));
-        Optional<Category> categoryOptional = categoryService.getCategoryById(1L);
-        assertNotNull(categoryOptional.get());
-        assertEquals("Electronics", categoryOptional.get().getName());
+    void getCategoryById_returnsCategoryOptional() {
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(sampleCategory));
+        Optional<Category> result = categoryService.getCategoryById(1L);
+        assertTrue(result.isPresent());
+        assertEquals("Electronics", result.get().getName());
+    }
+
+    @Test
+    void createCategory_savesAndReturnsCategory_andSavesToCsv() {
+        when(categoryRepository.save(any(Category.class))).thenReturn(sampleCategory);
+        when(categoryRepository.findAll()).thenReturn(List.of(sampleCategory));
+        Category created = categoryService.createCategory(sampleCategory);
+        assertEquals(sampleCategory.getName(), created.getName());
+        verify(categoryRepository, times(1)).save(sampleCategory);
+        verify(categoryRepository, atLeastOnce()).findAll();
+        // Optionally verify CSV writing if CsvUtil is mocked or spied
+    }
+
+    @Test
+    void updateCategory_updatesAndReturnsCategory_andSavesToCsv() {
+        when(categoryRepository.save(any(Category.class))).thenReturn(sampleCategory);
+        when(categoryRepository.findAll()).thenReturn(List.of(sampleCategory));
+        Category updated = categoryService.updateCategory(1L, sampleCategory);
+        assertEquals(sampleCategory.getName(), updated.getName());
+        verify(categoryRepository, times(1)).save(sampleCategory);
+        verify(categoryRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
+    void deleteCategory_deletesById_andSavesToCsv() {
+        doNothing().when(categoryRepository).deleteById(1L);
+        when(categoryRepository.findAll()).thenReturn(Collections.emptyList());
+        categoryService.deleteCategory(1L);
+        verify(categoryRepository, times(1)).deleteById(1L);
+        verify(categoryRepository, atLeastOnce()).findAll();
     }
 }
