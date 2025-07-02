@@ -7,6 +7,7 @@ import com.opencsv.CSVWriter;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CsvUtil {
@@ -22,10 +23,14 @@ public class CsvUtil {
                 Long id = Long.parseLong(line[0]);
                 String name = line[1];
                 BigDecimal price = new BigDecimal(line[2]);
-                products.add(new Product(id, name, price));
+                String description = line[3];
+                String image = line[4];
+                List<String> socialMediaLinks = Arrays.asList(line[5].split(";"));
+                List<String> highlights = Arrays.asList(line[6].split(";"));
+                String manufacturerInfo = line[7];
+                String technicalSpecs = line[8];
+                products.add(new Product(id, name, price, description, image, socialMediaLinks, highlights, manufacturerInfo, technicalSpecs));
             }
-        } catch (FileNotFoundException e) {
-            // File not found; treat as empty
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,12 +40,18 @@ public class CsvUtil {
     public static void writeProductsToCsv(String filePath, List<Product> products) {
         try (Writer w = new FileWriter(filePath, false);
              CSVWriter csvWriter = new CSVWriter(w)) {
-            csvWriter.writeNext(new String[]{"id", "name", "price"});
+            csvWriter.writeNext(new String[]{"id", "name", "price", "description", "image", "socialMediaLinks", "highlights", "manufacturerInfo", "technicalSpecs"});
             for (Product p : products) {
                 csvWriter.writeNext(new String[]{
                         String.valueOf(p.getId()),
                         p.getName(),
-                        p.getPrice().toString()
+                        p.getPrice().toString(),
+                        p.getDescription(),
+                        p.getImage(),
+                        String.join(";", p.getSocialMediaLinks()),
+                        String.join(";", p.getHighlights()),
+                        p.getManufacturerInfo(),
+                        p.getTechnicalSpecs()
                 });
             }
         } catch (Exception e) {

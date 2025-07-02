@@ -1,4 +1,3 @@
-id,name,price
-1,Apple,0.99
-2,Banana,0.59
-3,Orange,1.19
+id,name,price,description,image,socialMediaLinks,highlights,manufacturerInfo,technicalSpecs
+1,SuperWidget,29.99,"A versatile, high-quality widget for everyday use.","https://example.com/images/superwidget.jpg","https://twitter.com/superwidget;https://facebook.com/superwidget","Durable;Lightweight;Eco-friendly","SuperWidget Inc., 123 Widget Way, Widgetville","Weight: 500g; Dimensions: 10x5x2cm; Material: Aluminum"
+2,PowerGadget,49.99,"An advanced gadget with powerful features.","https://example.com/images/powergadget.jpg","https://instagram.com/powergadget;https://youtube.com/powergadget","Rechargeable;Water-resistant;2-year warranty","PowerGadget Corp., 456 Gadget Lane, Gadget City","Battery: 3000mAh; Connectivity: Bluetooth 5.0; Color: Black"
