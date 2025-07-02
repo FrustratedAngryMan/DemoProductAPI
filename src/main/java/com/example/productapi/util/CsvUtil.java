@@ -1,5 +1,6 @@
 package com.example.productapi.util;
 
+import com.example.productapi.model.Category;
 import com.example.productapi.model.Product;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -36,6 +37,26 @@ public class CsvUtil {
         }
         return products;
     }
+
+    public static List<Category> readCategoriesFromCsv(String filePath) {
+        List<Category> categories = new ArrayList<>();
+        try (Reader r = new FileReader(filePath);
+             CSVReader csvReader = new CSVReader(r)) {
+            String[] line;
+            boolean header = true;
+            while ((line = csvReader.readNext()) != null) {
+                if (header) { header = false; continue; }
+                Long id = Long.parseLong(line[0]);
+                String name = line[1];
+                String description = line[2];
+                categories.add(new Category(id, name, description));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+
 
     public static void writeProductsToCsv(String filePath, List<Product> products) {
         try (Writer w = new FileWriter(filePath, false);

@@ -1,6 +1,8 @@
 package com.example.productapi;
 
+import com.example.productapi.model.Category;
 import com.example.productapi.model.Product;
+import com.example.productapi.repository.CategoryRepository;
 import com.example.productapi.repository.ProductRepository;
 import com.example.productapi.util.CsvUtil;
 import org.slf4j.Logger;
@@ -20,6 +22,9 @@ public class ProductApiApplication implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(ProductApiApplication.class, args);
     }
@@ -29,6 +34,11 @@ public class ProductApiApplication implements CommandLineRunner {
         List<Product> products = CsvUtil.readProductsFromCsv(getClass().getClassLoader().getResource("products.csv").getFile());
         log.info("Loading products to DB. Products "+ products);
         productRepository.saveAll(products);
+
+        List<Category> categories = CsvUtil.readCategoriesFromCsv(getClass().getClassLoader().getResource("categories.csv").getFile());
+        log.info("Loading categories to DB. Categories " + categories);
+        categoryRepository.saveAll(categories);
+
         log.info("Data load completed");
     }
 }
