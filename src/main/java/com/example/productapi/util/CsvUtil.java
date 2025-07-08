@@ -69,8 +69,8 @@ public class CsvUtil {
                         p.getPrice().toString(),
                         p.getDescription(),
                         p.getImage(),
-                        String.join(";", p.getSocialMediaLinks()),
-                        String.join(";", p.getHighlights()),
+                        p.getSocialMediaLinks() != null ? String.join(";", p.getSocialMediaLinks()) : "",
+                        p.getHighlights() != null ? String.join(";", p.getHighlights()) : "",
                         p.getManufacturerInfo(),
                         p.getTechnicalSpecs()
                 });
